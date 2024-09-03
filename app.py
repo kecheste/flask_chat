@@ -3,7 +3,7 @@ from flask_socketio import SocketIO, emit
 from abc import ABC, abstractmethod
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your_secret_key_here'
+app.config['SECRET_KEY'] = '127167d6412876d481276gd17826d178284'
 socketio = SocketIO(app)
 
 class Observer(ABC):
