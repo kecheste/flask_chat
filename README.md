@@ -64,7 +64,13 @@ For more detailed information on the Observer pattern, you can visit [this resou
 1. Build the Docker image:
 
    ```bash
-   docker build -t flask-chat-app .
+   docker build -t flask-chat .
+   ```
+
+   or
+
+   ```bash
+   docker pull kecheste/flask-chat:v1.0
    ```
 
 2. Run the Docker container:
