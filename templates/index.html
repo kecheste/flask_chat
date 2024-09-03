@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Community Chat</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+      body {
+          font-family: Arial, sans-serif;
+          background-color: #f4f4f4;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+      }
+
+      #chat-container {
+          width: 500px;
+          background-color: #fff;
+          border-radius: 8px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          overflow: hidden;
+      }
+
+      h1 {
+          margin: 0;
+          padding: 20px;
+          background-color: #007bff;
+          color: #fff;
+          text-align: center;
+          font-size: 24px;
+      }
+
+      #user-list {
+          padding: 10px;
+          background-color: #f1f1f1;
+          border-bottom: 1px solid #ddd;
+      }
+
+      #user-list h3 {
+          margin: 0;
+          font-size: 18px;
+          color: #333;
+      }
+
+      #user-list p {
+          margin: 5px 0;
+          font-size: 14px;
+          color: #555;
+      }
+
+      #chat-box {
+          padding: 20px;
+          height: 300px;
+          overflow-y: auto;
+          background-color: #fafafa;
+      }
+
+      #chat-box p {
+          margin: 10px 0;
+          font-size: 14px;
+          color: #333;
+          padding: 8px 12px;
+          background-color: #e9ecef;
+          border-radius: 5px;
+      }
+
+      #message-container {
+          display: flex;
+          padding: 10px;
+          background-color: #f1f1f1;
+          border-top: 1px solid #ddd;
+      }
+
+      #message {
+          flex: 1;
+          padding: 10px;
+          font-size: 14px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          outline: none;
+      }
+
+      button {
+          padding: 10px 20px;
+          margin-left: 10px;
+          font-size: 14px;
+          border: none;
+          background-color: #007bff;
+          color: #fff;
+          border-radius: 4px;
+          cursor: pointer;
+      }
+
+      button:hover {
+          background-color: #0056b3;
+      }
+
+      #leave-button {
+          width: 100%;
+          padding: 10px;
+          font-size: 14px;
+          border: none;
+          background-color: #dc3545;
+          color: #fff;
+          border-radius: 0 0 8px 8px;
+          cursor: pointer;
+      }
+
+      #leave-button:hover {
+          background-color: #c82333;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="chat-container">
+      <h1>Community Chat</h1>
+      <div id="user-list">
+        <h3>Active Users:</h3>
+      </div>
+      <div id="chat-box"></div>
+      <div id="message-container">
+        <input
+          id="message"
+          autocomplete="off"
+          placeholder="Type your message..."
+        />
+        <button onclick="sendMessage()">Send</button>
+      </div>
+      <button id="leave-button" onclick="leaveChat()">Leave Chat</button>
+    </div>
+
+    <script type="text/javascript">
+      var socket = io();
+      var username = prompt("Please enter your name:");
+
+      if (username && username.trim() !== "") {
+          socket.emit('new_user', {'username': username.trim()});
+      } else {
+          window.location.href = '/';
+      }
+
+      socket.on('connect', function() {
+          console.log('Connected to the server.');
+      });
+
+      socket.on('message', function(data) {
+          const chatBox = document.getElementById('chat-box');
+          chatBox.innerHTML += '<p>' + data.msg + '</p>';
+          chatBox.scrollTop = chatBox.scrollHeight;
+      });
+
+      socket.on('update_users', function(data) {
+          const userList = document.getElementById('user-list');
+          userList.innerHTML = "<h3>Active Users:</h3>";
+          data.users.forEach(function(user) {
+              userList.innerHTML += '<p>' + user + '</p>';
+          });
+      });
+
+      socket.on('redirect', function(data) {
+          window.location.href = data.url;
+      });
+
+      function sendMessage() {
+          const messageInput = document.getElementById('message');
+          const message = messageInput.value;
+          socket.send(message);
+          messageInput.value = '';
+      }
+
+      function leaveChat() {
+          socket.emit('leave_chat');
+      }
+    </script>
+  </body>
+</html>
