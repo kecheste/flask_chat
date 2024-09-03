@@ -76,7 +76,7 @@ For more detailed information on the Observer pattern, you can visit [this resou
 2. Run the Docker container:
 
    ```bash
-   docker run -d -p 5000:5000 flask-chat-app
+   docker run -d -p 5000:5000 flask-chat:v1.0
    ```
 
 3. Access the application at `http://localhost:5000`.
