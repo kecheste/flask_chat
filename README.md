@@ -34,7 +34,7 @@ For more detailed information on the Observer pattern, you can visit [this resou
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-repo/flask-chat-app.git
+   git clone https://github.com/kecheste/flask_chat.git
    cd flask-chat-app
    ```
 
